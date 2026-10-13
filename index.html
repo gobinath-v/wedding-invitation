@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a0602">
   <title>Wedding Invitation | S. Muthupandi & R. Miruthika</title>
 
   <!-- Preconnect Media Assets -->
@@ -19,12 +20,25 @@
   <!-- Canvas Confetti CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
-  <!-- Google Fonts CDN -->
+  <!-- Premium Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;600;700;800&family=Cinzel+Decorative:wght@700;900&family=Great+Vibes&family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --gold-1: #fff0b8;
+      --gold-2: #ffd666;
+      --gold-3: #dfba63;
+      --gold-4: #b98a22;
+      --maroon: #7a1410;
+      --maroon-deep: #3a0705;
+      --kumkum: #c8231a;
+      --leaf: #1f6b3a;
+      --ink: #2b1c10;
+      --cream: #fff9f0;
+    }
+
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
@@ -36,23 +50,32 @@
       padding: 0;
       background-color: #0b0502;
       overflow: hidden;
-      color: #2b1c10;
+      color: var(--ink);
     }
 
-    .font-script {
-      font-family: 'Alex Brush', cursive;
+    /* ---------- Font utility classes ---------- */
+    .font-script { font-family: 'Pinyon Script', 'Alex Brush', cursive; }
+    .font-wishes { font-family: 'Great Vibes', cursive; letter-spacing: 0.5px; }
+    .font-quote { font-family: 'Cormorant Garamond', serif; font-weight: 600; }
+    .font-royal { font-family: 'Cinzel', serif; letter-spacing: 1.5px; }
+    .font-deco { font-family: 'Cinzel Decorative', 'Cinzel', serif; letter-spacing: 1.2px; }
+
+    /* Shimmering gold text */
+    .gold-shimmer {
+      background: linear-gradient(100deg, #b98a22 0%, #fff0b8 25%, #ffd666 45%, #fffbe6 55%, #dfba63 75%, #b98a22 100%);
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.85));
     }
 
-    .font-royal {
-      font-family: 'Cinzel', serif;
-      letter-spacing: 1.5px;
-    }
-
-    /* Continuous Touch Snap Screen Container */
+    /* ---------- App container ---------- */
     .app-screen {
       width: 100%;
       max-width: 430px;
       height: 100vh;
+      height: 100dvh;
       margin: 0 auto;
       position: relative;
       background: #000;
@@ -62,15 +85,11 @@
       scroll-behavior: smooth;
       box-shadow: 0 0 60px rgba(0, 0, 0, 0.98);
       -webkit-overflow-scrolling: touch;
-    }
-
-    .app-screen::-webkit-scrollbar {
-      display: none;
-    }
-    .app-screen {
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    .app-screen::-webkit-scrollbar { display: none; }
 
     /* Full-Screen Video Overlay */
     .global-effect-overlay {
@@ -81,6 +100,7 @@
       width: 100%;
       max-width: 430px;
       height: 100vh;
+      height: 100dvh;
       z-index: 35;
       pointer-events: none;
       opacity: 0;
@@ -108,70 +128,103 @@
       will-change: transform;
     }
 
+    /* Falling petals layer */
+    .petal-layer {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      height: 100vh;
+      height: 100dvh;
+      z-index: 34;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .petal {
+      position: absolute;
+      top: -30px;
+      width: 12px;
+      height: 16px;
+      border-radius: 80% 0 80% 0;
+      opacity: 0.85;
+      animation: petalFall linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes petalFall {
+      0% { transform: translate3d(0, -30px, 0) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.9; }
+      50% { transform: translate3d(35px, 55vh, 0) rotate(180deg); }
+      100% { transform: translate3d(-25px, 112vh, 0) rotate(380deg); opacity: 0.1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .petal-layer { display: none; }
+    }
+
     /* Floating Music Control Button */
     .music-ctrl-btn {
       position: fixed;
       top: 14px;
       right: calc(50% - 200px);
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      background: rgba(22, 10, 4, 0.85);
-      border: 1.5px solid #dfba63;
-      color: #ffd666;
+      background: radial-gradient(circle at 30% 30%, rgba(60, 22, 8, 0.95), rgba(18, 8, 3, 0.95));
+      border: 1.5px solid var(--gold-3);
+      color: var(--gold-2);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 70;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7), 0 0 0 3px rgba(223, 186, 99, 0.18);
       cursor: pointer;
-      backdrop-filter: blur(8px);
       transition: transform 0.3s ease;
     }
 
     @media (max-width: 430px) {
-      .music-ctrl-btn {
-        right: 14px;
-      }
+      .music-ctrl-btn { right: 14px; }
     }
 
-    .music-ctrl-btn.playing i {
-      animation: musicRotate 3.5s linear infinite;
-    }
+    .music-ctrl-btn.playing i { animation: musicRotate 3.5s linear infinite; }
 
     @keyframes musicRotate {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
 
-    /* Step / Page Wrapper */
+    /* ---------- Step / Page ---------- */
     .step-page {
       position: relative;
       width: 100%;
       min-height: 100vh;
+      min-height: 100dvh;
       height: 100vh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
       padding: 14px 12px;
       scroll-snap-align: start;
       scroll-snap-stop: always;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
+    .step-page::-webkit-scrollbar { display: none; }
+
+    .step-page .page-content { margin: auto 0; }
+
     .step-page.scrollable-content {
-      overflow-y: auto;
-      justify-content: flex-start;
       padding-top: 18px;
       padding-bottom: 22px;
     }
 
-    .step-page.scrollable-content::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Clear Page Backgrounds */
     .page-bg {
       position: absolute;
       inset: 0;
@@ -181,13 +234,15 @@
       object-position: center;
       opacity: 0.85;
       z-index: 0;
-      filter: saturate(1.1) brightness(0.95);
+      filter: saturate(1.12) brightness(0.95);
     }
 
     .overlay-tint {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at center, rgba(14, 6, 2, 0.22) 0%, rgba(8, 3, 1, 0.65) 100%);
+      background:
+        radial-gradient(circle at center, rgba(14, 6, 2, 0.2) 0%, rgba(8, 3, 1, 0.68) 100%),
+        linear-gradient(180deg, rgba(90, 14, 8, 0.28) 0%, transparent 30%, transparent 70%, rgba(90, 14, 8, 0.32) 100%);
       z-index: 1;
     }
 
@@ -201,14 +256,80 @@
       justify-content: center;
     }
 
-    /* Typography Palette */
+    /* ---------- Traditional frame (kolam-style border) ---------- */
+    .page-frame {
+      position: absolute;
+      inset: 7px;
+      border: 1.5px solid rgba(223, 186, 99, 0.7);
+      border-radius: 16px;
+      z-index: 3;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 4px rgba(0, 0, 0, 0.18), inset 0 0 0 5px rgba(223, 186, 99, 0.3);
+    }
+
+    .page-frame::before,
+    .page-frame::after {
+      content: "❖";
+      position: absolute;
+      font-size: 0.8rem;
+      color: var(--gold-2);
+      text-shadow: 0 0 8px rgba(255, 214, 102, 0.8);
+      background: rgba(20, 6, 2, 0.9);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+    }
+
+    .page-frame::before { top: -10px; left: -10px; }
+    .page-frame::after { bottom: -10px; right: -10px; }
+
+    .step-page { --frame-sticky: 1; }
+
+    /* Mango-leaf thoranam */
+    .thoranam {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 54px;
+      z-index: 4;
+      pointer-events: none;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.55));
+    }
+
+    /* Ornamental divider */
+    .orn-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 78%;
+      margin: 4px auto;
+      color: var(--gold-2);
+      font-size: 0.75rem;
+      text-shadow: 0 0 8px rgba(255, 214, 102, 0.6);
+    }
+
+    .orn-divider::before,
+    .orn-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-3), transparent);
+    }
+
+    .orn-divider.dark { color: var(--gold-4); text-shadow: none; }
+
+    /* Palette */
     .text-royal-gold {
       color: #ffe082 !important;
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
     }
 
     .text-royal-cream {
-      color: #fff9f0 !important;
+      color: var(--cream) !important;
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
     }
 
@@ -216,19 +337,21 @@
     .royal-card {
       position: relative;
       width: 100%;
-      background: linear-gradient(145deg, rgba(255, 253, 248, 0.96) 0%, rgba(250, 243, 232, 0.96) 100%);
+      background:
+        radial-gradient(circle at 100% 0%, rgba(223, 186, 99, 0.18) 0%, transparent 45%),
+        linear-gradient(145deg, rgba(255, 253, 248, 0.97) 0%, rgba(250, 241, 226, 0.97) 100%);
       border: 1px solid #d4af37;
       border-radius: 18px;
       padding: 14px 14px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), inset 0 0 0 3px rgba(255, 255, 255, 0.6);
-      color: #2b1c10;
+      color: var(--ink);
     }
 
     .royal-card::before {
       content: "";
       position: absolute;
       inset: 4px;
-      border: 1px solid rgba(212, 175, 55, 0.35);
+      border: 1px solid rgba(212, 175, 55, 0.4);
       border-radius: 14px;
       pointer-events: none;
     }
@@ -240,7 +363,7 @@
       right: 8px;
       font-size: 0.6rem;
       color: #c99a2c;
-      opacity: 0.8;
+      opacity: 0.85;
       pointer-events: none;
     }
 
@@ -250,18 +373,47 @@
       left: 8px;
       font-size: 0.6rem;
       color: #c99a2c;
-      opacity: 0.8;
+      opacity: 0.85;
       pointer-events: none;
     }
 
-    /* Page 1 - Round Ring Avatar */
+    /* Page 1 - Round Ring Avatar with halo */
+    .ring-avatar-wrap {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 8px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ring-avatar-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1.5px dashed rgba(255, 214, 102, 0.85);
+      animation: haloSpin 22s linear infinite;
+    }
+
+    .ring-avatar-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 214, 102, 0.28) 0%, transparent 70%);
+      z-index: -1;
+    }
+
+    @keyframes haloSpin { to { transform: rotate(360deg); } }
+
     .ring-avatar-box {
       width: 130px;
       height: 130px;
-      margin: 10px auto;
       border-radius: 50%;
-      border: 3px solid #dfba63;
-      box-shadow: 0 8px 24px rgba(223, 186, 99, 0.45);
+      border: 3px solid var(--gold-3);
+      box-shadow: 0 8px 24px rgba(223, 186, 99, 0.5), 0 0 0 4px rgba(0, 0, 0, 0.35);
       overflow: hidden;
       background-color: #1a0802;
     }
@@ -274,41 +426,51 @@
       display: block;
     }
 
+    /* Open invitation button */
+    .btn-royal {
+      position: relative;
+      background: linear-gradient(135deg, #7a1410 0%, #b3231a 50%, #7a1410 100%);
+      color: var(--gold-1);
+      border: 1.5px solid var(--gold-3);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.7), 0 0 18px rgba(255, 193, 7, 0.35), inset 0 0 0 2px rgba(255, 214, 102, 0.2);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+      animation: btnPulse 2.4s ease-in-out infinite;
+    }
+
+    .btn-royal:hover, .btn-royal:active { color: #fff; }
+
+    @keyframes btnPulse {
+      0%, 100% { box-shadow: 0 8px 22px rgba(0, 0, 0, 0.7), 0 0 10px rgba(255, 193, 7, 0.25), inset 0 0 0 2px rgba(255, 214, 102, 0.2); }
+      50% { box-shadow: 0 8px 22px rgba(0, 0, 0, 0.7), 0 0 26px rgba(255, 193, 7, 0.65), inset 0 0 0 2px rgba(255, 214, 102, 0.35); }
+    }
+
     /* ============================================================
-       PAGE 2: JOYFUL, WARM & PLEASANT SCRATCH CONTAINERS
+       SCRATCH CARDS
        ============================================================ */
-    .dual-scratch-card {
+    .single-scratch-card {
       position: relative;
       width: 100%;
       max-width: 325px;
-      height: 126px;
-      margin: 5px auto;
-      border-radius: 18px;
+      height: 134px;
+      margin: 10px auto;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.75), 0 0 12px rgba(255, 193, 7, 0.35);
-      border: 2px solid #dfba63;
-    }
-
-    .card-theme-engagement {
-      background: radial-gradient(circle at 50% 40%, #7b1e15 0%, #4a0d07 60%, #290502 100%);
-    }
-
-    .card-theme-muhurtham {
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.85), 0 0 14px rgba(255, 193, 7, 0.4);
+      border: 2px solid var(--gold-3);
       background: radial-gradient(circle at 50% 40%, #9e2a1b 0%, #5e1109 60%, #2f0402 100%);
     }
 
-    #cardMuhurthamWrapper {
-      display: none;
-      opacity: 0;
-      transform: translateY(12px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+    .reception-scratch-card {
+      position: relative;
       width: 100%;
-    }
-
-    #cardMuhurthamWrapper.revealed-flow {
-      display: block !important;
-      opacity: 1 !important;
-      transform: translateY(0) !important;
+      max-width: 325px;
+      height: 134px;
+      margin: 8px auto 10px auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.85), 0 0 16px rgba(0, 201, 167, 0.35);
+      border: 2px solid #20c997;
+      background: radial-gradient(circle at 50% 40%, #064e3b 0%, #022c22 65%, #01140e 100%);
     }
 
     .scratch-bg-video {
@@ -335,55 +497,40 @@
 
     .scratch-filigree-frame {
       position: absolute;
-      inset: 4px;
+      inset: 5px;
       border: 1.5px solid rgba(255, 215, 0, 0.75);
-      border-radius: 14px;
+      border-radius: 15px;
       pointer-events: none;
       z-index: 3;
       box-shadow: inset 0 0 8px rgba(255, 215, 0, 0.25);
     }
 
-    .scratch-filigree-frame::before {
-      content: "✦";
-      position: absolute;
-      top: 3px;
-      left: 6px;
-      font-size: 0.68rem;
-      color: #ffe082;
-      text-shadow: 0 0 6px #ffd700;
-    }
-
+    .scratch-filigree-frame::before,
     .scratch-filigree-frame::after {
       content: "✦";
       position: absolute;
       top: 3px;
-      right: 6px;
-      font-size: 0.68rem;
+      font-size: 0.7rem;
       color: #ffe082;
       text-shadow: 0 0 6px #ffd700;
     }
 
-    .filigree-corner-bl {
-      position: absolute;
-      bottom: 3px;
-      left: 6px;
-      font-size: 0.68rem;
-      color: #ffe082;
-      text-shadow: 0 0 6px #ffd700;
-      pointer-events: none;
-      z-index: 3;
-    }
+    .scratch-filigree-frame::before { left: 6px; }
+    .scratch-filigree-frame::after { right: 6px; }
 
+    .filigree-corner-bl,
     .filigree-corner-br {
       position: absolute;
       bottom: 3px;
-      right: 6px;
-      font-size: 0.68rem;
+      font-size: 0.7rem;
       color: #ffe082;
       text-shadow: 0 0 6px #ffd700;
       pointer-events: none;
       z-index: 3;
     }
+
+    .filigree-corner-bl { left: 6px; }
+    .filigree-corner-br { right: 6px; }
 
     .scratch-details-layer {
       position: absolute;
@@ -401,87 +548,87 @@
     .scratch-pill-badge {
       display: inline-flex;
       align-items: center;
-      padding: 2px 11px;
+      padding: 2.5px 12px;
       border-radius: 20px;
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       letter-spacing: 1.5px;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    }
-
-    .badge-amber-glow {
-      background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
-      color: #fff;
-      border: 1px solid #ffd54f;
-    }
-
-    .badge-ruby-glow {
       background: linear-gradient(135deg, #e11d48 0%, #9f1239 100%);
       color: #fff;
       border: 1px solid #fda4af;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .badge-emerald-glow {
+      background: linear-gradient(135deg, #059669 0%, #065f46 100%) !important;
+      border: 1px solid #6ee7b7 !important;
     }
 
     .scratch-date-heading {
-      font-size: 1.35rem;
+      font-size: 1.45rem;
       font-weight: 800;
-      letter-spacing: 2px;
+      letter-spacing: 2.2px;
       background: linear-gradient(180deg, #ffffff 0%, #ffd700 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin: 1px 0;
+      margin: 2px 0;
       filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.85));
     }
 
     .scratch-canvas-overlay {
       position: absolute;
       inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
       z-index: 10;
       touch-action: none;
       cursor: pointer;
     }
 
-    .scratch-wishes-box {
-      display: none;
-      opacity: 0;
-      max-width: 325px;
-      margin: 4px auto 7px auto;
-      background: linear-gradient(135deg, rgba(254, 243, 199, 0.95) 0%, rgba(253, 230, 138, 0.95) 100%);
-      border: 1.5px solid #d97706;
-      border-radius: 14px;
-      padding: 7px 12px;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6), inset 0 0 6px rgba(255, 255, 255, 0.8);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-      transform: translateY(8px);
+    /* Page 2 Warm Wishes Card */
+    .page2-wishes-card {
+      position: relative;
+      width: 100%;
+      max-width: 330px;
+      margin: 8px auto 0 auto;
+      background: linear-gradient(145deg, rgba(255, 248, 235, 0.96) 0%, rgba(254, 237, 211, 0.96) 100%);
+      border: 1.5px solid var(--gold-3);
+      border-radius: 16px;
+      padding: 12px 14px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.65), inset 0 0 0 3px rgba(255, 255, 255, 0.55);
+      color: #3d1c08;
+      text-align: center;
     }
 
-    .scratch-wishes-box.show-wishes {
-      display: block !important;
-      opacity: 1 !important;
-      transform: translateY(0) !important;
+    .wishes-heading-callig {
+      font-size: 1.7rem;
+      color: #9c2a1a;
+      line-height: 1.2;
+      margin-bottom: 4px;
     }
 
-    .scratch-wishes-box p {
-      font-size: 0.74rem;
-      color: #78350f;
-      font-weight: 600;
-      margin: 0;
+    .wishes-body-serif {
+      font-size: 0.95rem;
       font-style: italic;
-      line-height: 1.4;
-      text-shadow: none;
+      line-height: 1.45;
+      color: #5c2b0c;
+      margin-bottom: 4px;
     }
 
-    /* Page 3 - Locked Photo Circles */
+    /* ============================================================
+       PAGE 3: PROFILES
+       ============================================================ */
     .locked-photo-box {
       position: relative;
-      width: 122px;
-      height: 122px;
+      width: 124px;
+      height: 124px;
       margin: 0 auto;
       border-radius: 50%;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65), 0 0 0 4px rgba(0, 0, 0, 0.3), 0 0 22px rgba(223, 186, 99, 0.35);
       overflow: hidden;
-      border: 3px solid #dfba63;
+      border: 3px solid var(--gold-3);
       background-color: #1a0802;
     }
 
@@ -494,19 +641,17 @@
     }
 
     .locked-photo-box img.groom-img-focus {
-      object-position: 50% 14%;
-      transform: scale(2.4);
-      transform-origin: 50% 14%;
+      object-position: 50% 18%;
+      transform: scale(1.18);
+      transform-origin: 50% 18%;
     }
 
     .locked-photo-box.unlocked img.groom-img-focus {
       filter: blur(0px) brightness(1);
-      transform: scale(2.5);
+      transform: scale(1.24);
     }
 
-    .locked-photo-box img.bride-img-focus {
-      object-position: center 20%;
-    }
+    .locked-photo-box img.bride-img-focus { object-position: center 20%; }
 
     .locked-photo-box.unlocked img.bride-img-focus {
       filter: blur(0px) brightness(1);
@@ -521,7 +666,7 @@
       align-items: center;
       justify-content: center;
       background: rgba(14, 5, 2, 0.55);
-      color: #ffd666;
+      color: var(--gold-2);
       transition: opacity 0.5s ease;
       z-index: 3;
     }
@@ -532,19 +677,37 @@
       display: none;
     }
 
+    .name-plate {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 2px 16px;
+      border-top: 1px solid var(--gold-3);
+      border-bottom: 1px solid var(--gold-3);
+    }
+
     /* ============================================================
-       PAGE 4 & 5: DYNAMIC SLIDERS (DINDIGUL & TRICHY)
+       SLIDERS
        ============================================================ */
     .custom-slider-box {
       position: relative;
       width: 100%;
-      height: 175px;
-      border-radius: 12px;
+      height: 180px;
+      border-radius: 14px;
       overflow: hidden;
       border: 1.5px solid #d4af37;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6);
       margin: 6px 0;
       background-color: #000;
+    }
+
+    .custom-slider-box::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.45);
+      pointer-events: none;
+      z-index: 3;
     }
 
     .custom-slide-img, .trichy-slide-img {
@@ -557,7 +720,6 @@
       visibility: hidden;
       z-index: 1;
       transform: scale(1);
-      transition: opacity 0.85s ease-in-out, transform 3s ease-out, visibility 0.85s;
       display: block;
       pointer-events: none;
     }
@@ -569,23 +731,43 @@
       pointer-events: auto;
     }
 
-    /* Page 4 Transitions */
+    .custom-slide-img {
+      transition: opacity 0.85s ease-in-out, transform 3s ease-out, visibility 0.85s;
+    }
     .custom-slide-img.trans-zoom.active { transform: scale(1.15) !important; }
     .custom-slide-img.trans-pan.active { transform: scale(1.08) translateX(2%) !important; }
     .custom-slide-img.trans-slide.active { transform: scale(1.10) translateY(-1.5%) !important; }
     .custom-slide-img.trans-settle.active { transform: scale(1.05) !important; }
 
-    /* Page 5 Transitions (Diagonal / Ken-Burns Sweep / Gentle Rotate / Settle) */
-    .trichy-slide-img.trichy-trans-diag.active { transform: scale(1.12) translate(-2%, -1.5%) !important; }
-    .trichy-slide-img.trichy-trans-sweep.active { transform: scale(1.16) translate(2%, 1%) !important; }
-    .trichy-slide-img.trichy-trans-tilt.active { transform: scale(1.10) rotate(0.6deg) !important; }
-    .trichy-slide-img.trichy-trans-lift.active { transform: scale(1.06) translateY(2%) !important; }
+    .trichy-slide-img {
+      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 3.2s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.9s ease, visibility 0.9s;
+      filter: brightness(0.92);
+    }
+    .trichy-slide-img.active { filter: brightness(1.02); }
+    .trichy-slide-img.trichy-trans-glow.active { transform: scale(1.18) !important; }
+    .trichy-slide-img.trichy-trans-drift.active { transform: scale(1.12) translate(-2.5%, -1.2%) !important; }
+    .trichy-slide-img.trichy-trans-glide.active { transform: scale(1.14) translateX(2.5%) !important; }
+    .trichy-slide-img.trichy-trans-depth.active { transform: scale(1.08) translateY(1.5%) !important; }
+
+    .reception-revealed-box {
+      display: none;
+      opacity: 0;
+      width: 100%;
+      transform: translateY(12px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reception-revealed-box.active-revealed {
+      display: block !important;
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
 
     /* Video-Backed Message Card */
     .video-msg-card {
       position: relative;
       width: 100%;
-      border: 2px solid #dfba63;
+      border: 2px solid var(--gold-3);
       border-radius: 18px;
       padding: 16px 14px;
       box-shadow: 0 14px 34px rgba(0, 0, 0, 0.85);
@@ -616,10 +798,7 @@
       pointer-events: none;
     }
 
-    .card-video-content {
-      position: relative;
-      z-index: 2;
-    }
+    .card-video-content { position: relative; z-index: 2; }
 
     .video-msg-card::before {
       content: "";
@@ -637,32 +816,78 @@
       top: 5px;
       right: 8px;
       font-size: 0.6rem;
-      color: #dfba63;
+      color: var(--gold-3);
       opacity: 0.9;
       pointer-events: none;
       z-index: 3;
     }
 
-    /* Swipe hint animation */
-    .swipe-indicator {
-      animation: floatArrow 1.5s infinite ease-in-out;
-    }
+    /* Swipe hint */
+    .swipe-indicator { animation: floatArrow 1.5s infinite ease-in-out; }
 
     @keyframes floatArrow {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(5px); }
+    }
+
+    /* Scroll reveal (only active when JS adds .js-reveal-on to body) */
+    .js-reveal-on .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .js-reveal-on .reveal.in { opacity: 1; transform: translateY(0); }
+    .js-reveal-on .reveal.d1 { transition-delay: 0.12s; }
+    .js-reveal-on .reveal.d2 { transition-delay: 0.24s; }
+    .js-reveal-on .reveal.d3 { transition-delay: 0.36s; }
+
+    .form-control:focus {
+      border-color: var(--gold-3);
+      box-shadow: 0 0 0 0.2rem rgba(223, 186, 99, 0.3);
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Full-Screen Effect Video Overlay (Hidden until Open Invitation tapped) -->
+  <!-- Reusable SVG: mango-leaf thoranam -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="leafGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2f9a52" />
+        <stop offset="1" stop-color="#145a2e" />
+      </linearGradient>
+      <radialGradient id="flowerGrad" cx="50%" cy="40%" r="60%">
+        <stop offset="0" stop-color="#ffe27a" />
+        <stop offset="1" stop-color="#e48a06" />
+      </radialGradient>
+      <symbol id="mangoLeaf" viewBox="0 0 24 46">
+        <path d="M12 2 C22 14 21 34 12 44 C3 34 2 14 12 2 Z" fill="url(#leafGrad)" stroke="#0f4223" stroke-width="0.8" />
+        <path d="M12 6 L12 42" stroke="#9be0b0" stroke-width="0.8" opacity="0.7" />
+      </symbol>
+      <symbol id="marigold" viewBox="0 0 20 20">
+        <circle cx="10" cy="10" r="8.5" fill="url(#flowerGrad)" stroke="#a65d00" stroke-width="0.8" />
+        <circle cx="10" cy="10" r="4.2" fill="#ffb300" stroke="#a65d00" stroke-width="0.6" />
+        <circle cx="10" cy="10" r="1.6" fill="#7a3d00" />
+      </symbol>
+      <pattern id="thoranamPattern" width="52" height="54" patternUnits="userSpaceOnUse">
+        <use href="#mangoLeaf" x="2" y="3" width="15" height="34" />
+        <use href="#marigold" x="18" y="2" width="16" height="16" />
+        <use href="#mangoLeaf" x="35" y="3" width="15" height="34" />
+      </pattern>
+    </defs>
+  </svg>
+
+  <!-- Full-Screen Effect Video Overlay -->
   <div class="global-effect-overlay" id="globalEffectContainer">
     <video id="globalEffectVideo" muted playsinline preload="auto">
       <source src="https://files.catbox.moe/gh8ksa.mp4" type="video/mp4">
     </video>
   </div>
+
+  <!-- Falling flower petals -->
+  <div class="petal-layer" id="petalLayer"></div>
 
   <!-- Floating Music Control Button -->
   <div class="music-ctrl-btn" id="musicBtn" onclick="toggleBgm()" title="Play / Pause Music">
@@ -672,7 +897,7 @@
   <div class="app-screen" id="appScreen">
 
     <!-- Background Music Audio Element -->
-    <audio id="weddingBgm" loop preload="auto">
+    <audio id="weddingBgm" loop preload="metadata">
       <source src="https://files.catbox.moe/obgd5b.mp3" type="audio/mpeg">
     </audio>
 
@@ -680,103 +905,87 @@
     <div class="step-page text-white text-center" id="page-1">
       <img src="https://i.ibb.co/0php3586/1790654211017.jpg" alt="Wedding Couple Background" class="page-bg">
       <div class="overlay-tint"></div>
+      <div class="page-frame"></div>
+      <svg class="thoranam" viewBox="0 0 430 54" preserveAspectRatio="none" aria-hidden="true">
+        <rect width="430" height="54" fill="url(#thoranamPattern)" />
+      </svg>
 
-      <div class="page-content">
-        <p class="font-royal text-royal-gold small text-uppercase mb-0" style="font-weight: 700; font-size: 0.72rem; letter-spacing: 2px;">Subha Muhurtham</p>
+      <div class="page-content" style="padding-top: 46px;">
 
-        <h1 class="font-script py-1 text-royal-cream m-0" style="font-size: 3.2rem; text-shadow: 0 4px 18px rgba(0,0,0,0.9);">Muthupandi &amp; Miruthika</h1>
-        <p class="font-royal text-white-50 mb-2" style="font-weight: 600; font-size: 0.82rem; letter-spacing: 1.5px;">S. Muthupandi &amp; R. Miruthika</p>
+        <p class="font-royal text-royal-gold small text-uppercase mb-0 mt-1 reveal d1" style="font-weight: 700; font-size: 0.76rem; letter-spacing: 2.5px;">The Wedding Celebration</p>
+
+        <h1 class="font-script py-1 gold-shimmer m-0 reveal d2" style="font-size: 3.4rem; line-height: 1.05;">Muthupandi &amp; Miruthika</h1>
+        <p class="font-royal text-white-50 mb-1 reveal d2" style="font-weight: 600; font-size: 0.82rem; letter-spacing: 1.5px;">S. Muthupandi &amp; R. Miruthika</p>
+
+        <div class="orn-divider reveal d3"><span>❖</span></div>
 
         <!-- Round Ring Portrait -->
-        <div class="ring-avatar-box">
-          <img src="https://i.ibb.co/ds4Fs5D4/Ring-exchnage-image.jpg" alt="Wedding Rings Exchange">
+        <div class="ring-avatar-wrap reveal d3">
+          <div class="ring-avatar-box">
+            <img src="https://i.ibb.co/ds4Fs5D4/Ring-exchnage-image.jpg" alt="Wedding Rings Exchange">
+          </div>
         </div>
 
-        <p class="text-white-50 small px-4 mb-3" style="line-height: 1.5; font-size: 0.75rem;">Together with their families, cordially invite you to celebrate their auspicious traditional wedding union.</p>
+        <p class="text-white-50 small px-4 mb-3 font-quote" style="line-height: 1.5; font-size: 0.92rem; font-weight: 500;">Together with their families, cordially invite you to celebrate their auspicious traditional wedding union.</p>
 
         <!-- Open Invitation Button -->
-        <button type="button" class="btn btn-outline-warning btn-sm rounded-pill px-4 py-2 font-royal fw-bold shadow text-royal-gold border-warning" onclick="openInvitationAction()" style="font-size: 0.78rem;">
+        <button type="button" class="btn btn-royal btn-sm rounded-pill px-4 py-2 font-royal fw-bold" onclick="openInvitationAction()" style="font-size: 0.78rem;">
           <i class="fa-solid fa-envelope-open fa-bounce me-2"></i>Open Invitation
         </button>
       </div>
     </div>
 
-    <!-- PAGE 2: SEQUENTIAL SCRATCH WITH JOYFUL WARM CONTAINERS & WISHES -->
+    <!-- PAGE 2: MARRIAGE DATE SCRATCH CARD & BLESSINGS -->
     <div class="step-page text-center" id="page-2">
       <img src="https://i.ibb.co/8DrMKkBR/1790654204608.jpg" alt="Wedding Couple Moments" class="page-bg">
       <div class="overlay-tint"></div>
+      <div class="page-frame"></div>
+      <svg class="thoranam" viewBox="0 0 430 54" preserveAspectRatio="none" aria-hidden="true">
+        <rect width="430" height="54" fill="url(#thoranamPattern)" />
+      </svg>
 
-      <div class="page-content">
-        <p class="font-royal text-uppercase text-royal-gold fw-bold small mb-0" style="font-size: 0.72rem; letter-spacing: 2px;">Save The Dates</p>
-        <h2 class="font-script text-royal-cream mb-0" style="font-size: 2.8rem; text-shadow: 0 4px 14px rgba(0,0,0,0.9);">Scratch To Reveal</h2>
-        <p class="text-royal-cream fw-medium small mb-1" id="scratchGuideText" style="font-size: 0.72rem;">Scratch card 1 below to unveil our engagement date</p>
+      <div class="page-content" style="padding-top: 44px;">
+        <p class="font-royal text-uppercase text-royal-gold fw-bold small mb-0 reveal" style="font-size: 0.72rem; letter-spacing: 2px;">Sacred Auspicious Union</p>
+        <h2 class="font-script gold-shimmer mb-0 reveal d1" style="font-size: 3rem;">Save Our Date</h2>
+        <p class="text-royal-cream fw-medium small mb-1 reveal d1" style="font-size: 0.72rem;">Scratch the golden card below to reveal our Subha Muhurtham</p>
 
-        <!-- 1. ENGAGEMENT WARM-AMBER DESIGNED SCRATCH CONTAINER -->
-        <div class="dual-scratch-card card-theme-engagement" id="cardEngagement">
-          <video class="scratch-bg-video" autoplay muted loop playsinline preload="auto">
+        <!-- SUBHA MUHURTHAM SCRATCH CARD -->
+        <div class="single-scratch-card reveal d2" id="cardMuhurtham">
+          <video class="scratch-bg-video" muted loop playsinline preload="metadata">
             <source src="https://files.catbox.moe/gh8ksa.mp4" type="video/mp4">
           </video>
           <div class="scratch-tint-layer"></div>
 
-          <!-- Filigree Accents -->
           <div class="scratch-filigree-frame"></div>
           <span class="filigree-corner-bl">✦</span>
           <span class="filigree-corner-br">✦</span>
 
-          <!-- Styled Card Interior -->
           <div class="scratch-details-layer">
-            <span class="scratch-pill-badge badge-amber-glow font-royal fw-bold">
-              <i class="fa-solid fa-ring me-1"></i> ENGAGEMENT &amp; RECEPTION
+            <span class="scratch-pill-badge font-royal fw-bold">
+              <i class="fa-solid fa-heart me-1"></i> SUBHA MUHURTHAM
             </span>
-            <div class="scratch-date-heading font-royal">12 · 11 · 2026</div>
-            <small class="font-royal text-warning fw-bold" style="font-size: 0.76rem; letter-spacing: 0.8px;">
-              <i class="fa-regular fa-clock me-1"></i>Thursday | 6:00 PM – 7:00 PM
+            <div class="scratch-date-heading font-royal">13 · 11 · 2026</div>
+            <small class="font-royal text-warning fw-bold" style="font-size: 0.78rem; letter-spacing: 0.8px;">
+              <i class="fa-regular fa-clock me-1"></i>Friday | 6:00 AM – 7:30 AM
             </small>
+            <small class="text-white fw-semibold" style="font-size: 0.66rem;">(Viruchiga Lagnam)</small>
           </div>
 
-          <canvas class="scratch-canvas-overlay" id="canvasEngagement"></canvas>
+          <canvas class="scratch-canvas-overlay" id="canvasMuhurtham"></canvas>
         </div>
 
-        <!-- Engagement Wishes Box (Appears warmly after Card 1 is scratched) -->
-        <div class="scratch-wishes-box" id="wishesBox1">
-          <p class="font-royal">✨ "Two souls joined in promise and love. Blessed with rings, bound by hearts forever!" 💍💖</p>
+        <!-- Warm Wishes -->
+        <div class="page2-wishes-card reveal d3">
+          <div class="wishes-heading-callig font-wishes">A Lifetime of Togetherness</div>
+          <p class="wishes-body-serif font-quote">
+            "Two souls united by destiny, blessed with eternal promises and surrounded by beloved elders' prayers."
+          </p>
+          <p class="wishes-body-serif font-quote mb-0 text-muted" style="font-size: 0.88rem;">
+            "We wholeheartedly invite you to bestow your divine blessings upon our wedding journey!" 🌸🪔
+          </p>
         </div>
 
-        <!-- 2. SUBHA MUHURTHAM WARM-BURGUNDY SCRATCH WRAPPER (Auto-revealed after Card 1) -->
-        <div id="cardMuhurthamWrapper">
-          <div class="dual-scratch-card card-theme-muhurtham" id="cardMuhurtham">
-            <video class="scratch-bg-video" autoplay muted loop playsinline preload="auto">
-              <source src="https://files.catbox.moe/gh8ksa.mp4" type="video/mp4">
-            </video>
-            <div class="scratch-tint-layer"></div>
-
-            <!-- Filigree Accents -->
-            <div class="scratch-filigree-frame"></div>
-            <span class="filigree-corner-bl">✦</span>
-            <span class="filigree-corner-br">✦</span>
-
-            <!-- Styled Card Interior -->
-            <div class="scratch-details-layer">
-              <span class="scratch-pill-badge badge-ruby-glow font-royal fw-bold">
-                <i class="fa-solid fa-heart me-1"></i> SUBHA MUHURTHAM
-              </span>
-              <div class="scratch-date-heading font-royal">13 · 11 · 2026</div>
-              <small class="font-royal text-warning fw-bold" style="font-size: 0.76rem; letter-spacing: 0.8px;">
-                <i class="fa-regular fa-clock me-1"></i>Friday | 6:00 AM – 7:30 AM
-              </small>
-              <small class="text-white fw-semibold" style="font-size: 0.65rem;">(Viruchiga Lagnam)</small>
-            </div>
-
-            <canvas class="scratch-canvas-overlay" id="canvasMuhurtham"></canvas>
-          </div>
-
-          <!-- Marriage Wishes Box (Appears warmly after Card 2 is scratched) -->
-          <div class="scratch-wishes-box" id="wishesBox2">
-            <p class="font-royal">🪔 "May sacred mantras and elder blessings guide our union into a lifetime of endless joy!" 🌸✨</p>
-          </div>
-        </div>
-
-        <p class="text-royal-gold fw-semibold small mt-1 mb-1" style="font-size: 0.7rem;">Swipe down for couple profiles</p>
+        <p class="text-royal-gold fw-semibold small mt-2 mb-0" style="font-size: 0.7rem;">Swipe down for couple profiles</p>
         <div class="text-royal-gold small swipe-indicator">
           <i class="fa-solid fa-chevron-down"></i>
         </div>
@@ -787,12 +996,13 @@
     <div class="step-page text-center" id="page-3">
       <img src="https://i.ibb.co/Bh9vpV4/1790654195328.jpg" alt="Couple Portrait" class="page-bg">
       <div class="overlay-tint"></div>
+      <div class="page-frame"></div>
 
       <div class="page-content position-relative" id="profilesContent">
 
         <div class="position-relative text-center mt-1 mb-1">
           <p class="font-royal text-uppercase text-royal-gold fw-bold small mb-0" style="letter-spacing: 1.5px; font-size: 0.7rem;">With Sacred Blessings</p>
-          <h2 class="font-script py-0 m-0 text-royal-cream" id="couplesHeading" style="font-size: 2.9rem; text-shadow: 0 4px 14px rgba(0,0,0,0.9);">
+          <h2 class="font-script py-0 m-0 gold-shimmer" id="couplesHeading" style="font-size: 3rem;">
             The Groom &amp; Bride
           </h2>
         </div>
@@ -801,18 +1011,21 @@
         <!-- Groom Info -->
         <div class="my-1 position-relative">
           <div class="locked-photo-box" id="groomBox" onclick="unlockProfile('groomBox')">
-            <img src="https://i.ibb.co/gZD8QQNZ/groom.jpg" alt="Groom S. Muthupandi" class="groom-img-focus">
+            <img src="https://files.catbox.moe/f0lobc.jpg" alt="Groom S. Muthupandi" class="groom-img-focus">
             <div class="lock-overlay" id="groomLock">
               <i class="fa-solid fa-lock fs-5 mb-1"></i>
               <small class="font-royal fw-bold" style="font-size: 0.62rem; letter-spacing: 1px;">TAP TO UNLOCK</small>
             </div>
           </div>
 
-          <h3 class="font-royal mt-1 mb-0 text-white fw-bold fs-6">S. Muthupandi</h3>
-          <span class="badge bg-warning text-dark font-royal fw-bold" style="font-size: 0.65rem; letter-spacing: 0.8px;">D.E.E.E., B.B.A.</span>
+          <div class="name-plate">
+            <h3 class="font-deco mt-1 mb-0 text-white fw-bold fs-6">S. Muthupandi</h3>
+            <span class="font-royal text-royal-gold" style="font-size: 0.7rem; letter-spacing: 1.8px;">THE GROOM</span>
+          </div>
+          <div><span class="badge bg-warning text-dark font-royal fw-bold mt-1" style="font-size: 0.65rem; letter-spacing: 0.8px;">D.E.E.E., B.B.A.</span></div>
         </div>
 
-        <h2 class="font-script my-0 text-royal-gold" style="font-size: 2.2rem;">&amp;</h2>
+        <h2 class="font-script my-0 gold-shimmer" style="font-size: 2.4rem;">&amp;</h2>
 
         <!-- Bride Info -->
         <div class="my-1 position-relative">
@@ -824,8 +1037,11 @@
             </div>
           </div>
 
-          <h3 class="font-royal mt-1 mb-0 text-white fw-bold fs-6">R. Miruthika</h3>
-          <span class="badge bg-warning text-dark font-royal fw-bold" style="font-size: 0.65rem; letter-spacing: 0.8px;">M.Sc.</span>
+          <div class="name-plate">
+            <h3 class="font-deco mt-1 mb-0 text-white fw-bold fs-6">R. Miruthika</h3>
+            <span class="font-royal text-royal-gold" style="font-size: 0.7rem; letter-spacing: 1.8px;">THE BRIDE</span>
+          </div>
+          <div><span class="badge bg-warning text-dark font-royal fw-bold mt-1" style="font-size: 0.65rem; letter-spacing: 0.8px;">M.Sc.</span></div>
         </div>
 
         <div class="text-royal-gold small swipe-indicator mt-1">
@@ -835,39 +1051,40 @@
       </div>
     </div>
 
-    <!-- PAGE 4: EVENTS & DYNAMIC 5-IMAGE AUTO SLIDER (DINDIGUL) -->
+    <!-- PAGE 4: EVENTS & SLIDER (DINDIGUL) -->
     <div class="step-page scrollable-content text-center" id="page-4">
       <img src="https://i.ibb.co/XkLgB33j/1790654166517.jpg" alt="Wedding Celebration" class="page-bg">
       <div class="overlay-tint"></div>
+      <div class="page-frame"></div>
 
       <div class="page-content">
-        <h2 class="font-script py-0 m-0 text-royal-cream" style="font-size: 3rem; text-shadow: 0 4px 14px rgba(0,0,0,0.85);">Wedding Events</h2>
+        <h2 class="font-script py-0 m-0 gold-shimmer" style="font-size: 3.1rem;">Wedding Events</h2>
         <p class="font-royal text-royal-gold small text-uppercase mb-2 fw-bold" style="font-size: 0.72rem; letter-spacing: 1.5px;">Wedding Countdown</p>
 
         <!-- Live Countdown -->
-        <div class="bg-dark text-white rounded-3 shadow py-2 px-2 mb-2 w-100 border border-warning" style="background-color: #120703 !important;">
+        <div class="bg-dark text-white rounded-3 shadow py-2 px-2 mb-2 w-100 border border-warning" style="background-color: #120703 !important; box-shadow: 0 0 20px rgba(255, 193, 7, 0.25) !important;">
           <div class="row justify-content-center text-center m-0">
             <div class="col-3 p-1">
-              <p class="font-royal fw-bold fs-5 m-0 text-royal-gold" id="timer-days">00</p>
+              <p class="font-deco fw-bold fs-5 m-0 text-royal-gold" id="timer-days">00</p>
               <small class="text-uppercase text-secondary" style="font-size: 0.62rem;">Days</small>
             </div>
             <div class="col-3 p-1">
-              <p class="font-royal fw-bold fs-5 m-0 text-royal-gold" id="timer-hours">00</p>
+              <p class="font-deco fw-bold fs-5 m-0 text-royal-gold" id="timer-hours">00</p>
               <small class="text-uppercase text-secondary" style="font-size: 0.62rem;">Hours</small>
             </div>
             <div class="col-3 p-1">
-              <p class="font-royal fw-bold fs-5 m-0 text-royal-gold" id="timer-mins">00</p>
+              <p class="font-deco fw-bold fs-5 m-0 text-royal-gold" id="timer-mins">00</p>
               <small class="text-uppercase text-secondary" style="font-size: 0.62rem;">Mins</small>
             </div>
             <div class="col-3 p-1">
-              <p class="font-royal fw-bold fs-5 m-0 text-royal-gold" id="timer-secs">00</p>
+              <p class="font-deco fw-bold fs-5 m-0 text-royal-gold" id="timer-secs">00</p>
               <small class="text-uppercase text-secondary" style="font-size: 0.62rem;">Secs</small>
             </div>
           </div>
         </div>
 
         <!-- Event 1: Engagement & Reception -->
-        <div class="royal-card text-start mb-2 w-100">
+        <div class="royal-card text-start mb-2 w-100 reveal">
           <span class="corner-bl-medallion">✦</span>
           <h4 class="font-royal fw-bold text-dark fs-6 mb-1" style="font-size: 0.88rem;">Engagement &amp; Reception</h4>
           <p class="text-muted small mb-1" style="font-size: 0.76rem;"><i class="fa-regular fa-clock me-1 text-danger"></i>Thursday, 12 November 2026 | 6:00 PM – 7:00 PM</p>
@@ -875,22 +1092,22 @@
         </div>
 
         <!-- Event 2: Subha Muhurtham & Venue Carousel -->
-        <div class="royal-card text-start mb-2 w-100">
+        <div class="royal-card text-start mb-2 w-100 reveal d1">
           <span class="corner-bl-medallion">✦</span>
           <h4 class="font-royal fw-bold text-dark fs-6 mb-1" style="font-size: 0.88rem;">Subha Muhurtham &amp; Venue</h4>
           <p class="text-muted small mb-1" style="font-size: 0.76rem;"><i class="fa-regular fa-clock me-1 text-danger"></i>Friday, 13 November 2026 | 6:00 AM – 7:30 AM</p>
           <p class="text-dark fw-bold small mb-1" style="font-size: 0.74rem;"><i class="fa-solid fa-hotel me-1 text-danger"></i>Kamarajar Thirumana Mandapam, Dindigul</p>
 
-          <!-- 5 Dynamic Sliding Images with Transitions Every 3 Seconds -->
+          <!-- 5 Dynamic Sliding Images -->
           <div class="custom-slider-box" id="mahalSlider">
-            <img src="https://i.ibb.co/kg3Zs809/IMG-20260928-072317.jpg" alt="Kamarajar Thirumana Mandapam Overview" class="custom-slide-img active trans-zoom[span_0](start_span)"[span_0](end_span)>
-            <img src="https://i.ibb.co/cHJ7RTj/greenstudio-JPG.jpg" alt="Wedding Stage Decoration" class="custom-slide-img[span_1](start_span)"[span_1](end_span)>
-            <img src="https://i.ibb.co/5xRWc9dF/The-Wedding-Shotz-JPG.jpg" alt="Muhurtham Mandapam Setup" class="custom-slide-img[span_2](start_span)"[span_2](end_span)>
-            <img src="https://i.ibb.co/rRrhwbBw/Bhojana-Nilyala-JPG.jpg" alt="Dining Hall Arrangement" class="custom-slide-img[span_3](start_span)"[span_3](end_span)>
-            <img src="https://i.ibb.co/DP4tTtXy/Edenevents-TM-Event-Planner-Kerala-JPG.jpg" alt="Entrance Arch and Floral Decor" class="custom-slide-img[span_4](start_span)"[span_4](end_span)>
+            <img src="https://i.ibb.co/kg3Zs809/IMG-20260928-072317.jpg" alt="Kamarajar Thirumana Mandapam Overview" class="custom-slide-img active trans-zoom">
+            <img src="https://i.ibb.co/cHJ7RTj/greenstudio-JPG.jpg" alt="Wedding Stage Decoration" class="custom-slide-img">
+            <img src="https://i.ibb.co/5xRWc9dF/The-Wedding-Shotz-JPG.jpg" alt="Muhurtham Mandapam Setup" class="custom-slide-img">
+            <img src="https://i.ibb.co/rRrhwbBw/Bhojana-Nilyala-JPG.jpg" alt="Dining Hall Arrangement" class="custom-slide-img">
+            <img src="https://i.ibb.co/DP4tTtXy/Edenevents-TM-Event-Planner-Kerala-JPG.jpg" alt="Entrance Arch and Floral Decor" class="custom-slide-img">
           </div>
 
-          <a href="https://maps.google.com/?q=Kamarajar+Thirumana+Mandapam+Siluvathur+Road+Dindigul" target="_blank" class="btn btn-outline-dark btn-sm rounded-pill py-1 px-3 w-100 font-royal fw-bold mt-1" style="font-size: 0.72rem;">
+          <a href="https://maps.google.com/?q=Kamarajar+Thirumana+Mandapam+Siluvathur+Road+Dindigul" target="_blank" rel="noopener" class="btn btn-outline-dark btn-sm rounded-pill py-1 px-3 w-100 font-royal fw-bold mt-1" style="font-size: 0.72rem;">
             <i class="fa-solid fa-map-location-dot me-1"></i>Open Venue in Google Maps (Near SMB School)
           </a>
         </div>
@@ -902,18 +1119,18 @@
       </div>
     </div>
 
-    <!-- PAGE 5: DEDICATED STANDALONE PAGE FOR POST-MARRIAGE GRAND RECEPTION (TRICHY) -->
+    <!-- PAGE 5: RECEPTION (EMERALD SCRATCH CARD + RAVI MINI HALL) -->
     <div class="step-page scrollable-content text-center" id="page-5">
-      <!-- Dedicated festive celebratory background -->
       <img src="https://i.ibb.co/gM2yyFK7/1790654185864.jpg" alt="Trichy Grand Celebration" class="page-bg">
       <div class="overlay-tint"></div>
+      <div class="page-frame"></div>
 
       <div class="page-content">
         <p class="font-royal text-uppercase text-royal-gold fw-bold small mb-0" style="font-size: 0.72rem; letter-spacing: 2px;">Celebration Continues</p>
-        <h2 class="font-script text-royal-cream mb-1" style="font-size: 3.1rem; text-shadow: 0 4px 14px rgba(0,0,0,0.9);">Post-Marriage Reception</h2>
+        <h2 class="font-script gold-shimmer mb-1" style="font-size: 3.1rem; line-height: 1.1;">Post-Marriage Reception</h2>
 
-        <!-- Welcoming Catchy Note Card -->
-        <div class="royal-card text-center mb-2 w-100 border-warning p-3">
+        <!-- Welcoming Note Card -->
+        <div class="royal-card text-center mb-2 w-100 border-warning p-3 reveal">
           <span class="corner-bl-medallion">✦</span>
           <span class="badge bg-warning text-dark font-royal fw-bold mb-2" style="font-size: 0.68rem; letter-spacing: 1px;">
             🎉 IN CASE YOU MISSED IT, DON'T WORRY!
@@ -926,32 +1143,59 @@
           </p>
         </div>
 
-        <!-- Event Details Card with Dedicated Trichy Grand Hall Carousel -->
-        <div class="royal-card text-start mb-2 w-100 p-3">
-          <span class="corner-bl-medallion">✦</span>
-          <h4 class="font-royal fw-bold text-dark fs-6 mb-1" style="font-size: 0.9rem;">Grand Reception in Trichy</h4>
-          <p class="text-muted small mb-1" style="font-size: 0.78rem;">
-            <i class="fa-regular fa-calendar-check me-2 text-danger"></i>Sunday, 15 November 2026
-          </p>
-          <p class="text-muted small mb-1" style="font-size: 0.78rem;">
-            <i class="fa-regular fa-clock me-2 text-danger"></i>Timing: 11:00 AM Onwards
-          </p>
-          <p class="text-dark fw-semibold small mb-2" style="font-size: 0.78rem;">
-            <i class="fa-solid fa-location-dot me-2 text-primary"></i>In Trichy, Tamil Nadu
-          </p>
+        <!-- EMERALD & GOLD SCRATCH CARD -->
+        <div class="reception-scratch-card" id="cardReception">
+          <video class="scratch-bg-video" muted loop playsinline preload="metadata">
+            <source src="https://files.catbox.moe/gh8ksa.mp4" type="video/mp4">
+          </video>
+          <div class="scratch-tint-layer"></div>
 
-          <!-- 4 Dynamic Trichy Grand Reception Hall Images (Catbox URLs) -->
-          <div class="custom-slider-box" id="trichySlider">
-            <img src="https://files.catbox.moe/q3w85g.jpg" alt="Trichy Grand Reception Decor 1" class="trichy-slide-img active trichy-trans-diag">
-            <img src="https://files.catbox.moe/xf5tsk.jpg" alt="Trichy Grand Reception Decor 2" class="trichy-slide-img">
-            <img src="https://files.catbox.moe/8q1m1e.jpg" alt="Trichy Grand Reception Decor 3" class="trichy-slide-img">
-            <img src="https://files.catbox.moe/ibe4v4.jpg" alt="Trichy Grand Reception Decor 4" class="trichy-slide-img">
+          <div class="scratch-filigree-frame"></div>
+          <span class="filigree-corner-bl">✦</span>
+          <span class="filigree-corner-br">✦</span>
+
+          <div class="scratch-details-layer">
+            <span class="scratch-pill-badge badge-emerald-glow font-royal fw-bold">
+              <i class="fa-solid fa-champagne-glasses me-1"></i> GRAND RECEPTION
+            </span>
+            <div class="scratch-date-heading font-royal">15 · 11 · 2026</div>
+            <small class="font-royal text-warning fw-bold" style="font-size: 0.78rem; letter-spacing: 0.8px;">
+              <i class="fa-regular fa-clock me-1"></i>Sunday | 11:00 AM Onwards
+            </small>
+            <small class="text-white fw-semibold" style="font-size: 0.66rem;">Ravi Mini Hall, Trichy</small>
           </div>
 
-          <!-- Direct Google Map Venue Link for Trichy -->
-          <a href="https://maps.google.com/?q=Trichy+Tamil+Nadu" target="_blank" class="btn btn-outline-dark btn-sm rounded-pill py-2 px-3 w-100 font-royal fw-bold shadow-sm mt-1" style="font-size: 0.75rem;">
-            <i class="fa-solid fa-map-location-dot me-1 text-danger"></i>Open Trichy Venue in Google Maps
-          </a>
+          <canvas class="scratch-canvas-overlay" id="canvasReception"></canvas>
+        </div>
+
+        <!-- REVEALED RECEPTION CONTAINER -->
+        <div class="reception-revealed-box" id="receptionRevealedBox">
+          <div class="royal-card text-start mb-2 w-100 p-3">
+            <span class="corner-bl-medallion">✦</span>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <h4 class="font-royal fw-bold text-dark fs-6 mb-0" style="font-size: 0.92rem;">Ravi Mini Hall</h4>
+              <span class="badge bg-success text-white font-royal" style="font-size: 0.62rem;">VENUE DETAILS 💐</span>
+            </div>
+            <p class="text-muted small mb-1" style="font-size: 0.78rem;">
+              <i class="fa-regular fa-calendar-check me-2 text-danger"></i>Sunday, 15 November 2026 | 11:00 AM Onwards
+            </p>
+            <p class="text-dark fw-semibold small mb-2" style="font-size: 0.75rem; line-height: 1.45;">
+              <i class="fa-solid fa-location-dot me-1 text-primary"></i>
+              24, Karur Bypass Road, Opp maya residency, next to Kalaingar Arivalayam, Tiruchirappalli, Tamil Nadu 620002
+            </p>
+
+            <!-- 4 Reception Images Carousel -->
+            <div class="custom-slider-box" id="trichySlider">
+              <img src="https://files.catbox.moe/q3w85g.jpg" alt="Ravi Mini Hall Decor 1" class="trichy-slide-img active trichy-trans-glow">
+              <img src="https://files.catbox.moe/xf5tsk.jpg" alt="Ravi Mini Hall Decor 2" class="trichy-slide-img">
+              <img src="https://files.catbox.moe/8q1m1e.jpg" alt="Ravi Mini Hall Decor 3" class="trichy-slide-img">
+              <img src="https://files.catbox.moe/ibe4v4.jpg" alt="Ravi Mini Hall Decor 4" class="trichy-slide-img">
+            </div>
+
+            <a href="https://maps.app.goo.gl/hoAXy5gqeTttdW1p9?g_st=aw" target="_blank" rel="noopener" class="btn btn-outline-dark btn-sm rounded-pill py-2 px-3 w-100 font-royal fw-bold shadow-sm mt-1" style="font-size: 0.75rem;">
+              <i class="fa-solid fa-map-location-dot me-1 text-danger"></i>Open Ravi Mini Hall in Google Maps
+            </a>
+          </div>
         </div>
 
         <div class="text-royal-gold small swipe-indicator mt-1">
@@ -965,27 +1209,28 @@
     <div class="step-page text-center" id="page-6">
       <img src="https://i.ibb.co/XkLgB33j/1790654166517.jpg" alt="Celebration Background" class="page-bg">
       <div class="overlay-tint"></div>
+      <div class="page-frame"></div>
 
       <div class="page-content">
         <p class="font-royal text-uppercase text-royal-gold small mb-0 fw-bold" style="font-size: 0.72rem; letter-spacing: 1.5px;">A Note From The Couple</p>
-        <h2 class="font-script py-0 m-0 text-royal-cream" style="font-size: 3rem; text-shadow: 0 4px 14px rgba(0,0,0,0.85);">Join Our Celebration</h2>
+        <h2 class="font-script py-0 m-0 gold-shimmer" style="font-size: 3.1rem;">Join Our Celebration</h2>
 
-        <!-- Message Card Container with Looping Video Inside -->
+        <!-- Message Card with Looping Video -->
         <div class="video-msg-card text-center my-2">
-          <video id="msgVideoBg" class="card-embedded-video" autoplay muted loop playsinline preload="auto">
+          <video id="msgVideoBg" class="card-embedded-video" muted loop playsinline preload="metadata">
             <source src="https://files.catbox.moe/gh8ksa.mp4" type="video/mp4">
           </video>
           <div class="card-video-overlay"></div>
 
           <div class="card-video-content">
             <span class="corner-bl-medallion">✦</span>
-            <p class="text-white small mb-1" style="line-height: 1.5; font-size: 0.8rem; text-shadow: 0 2px 6px rgba(0,0,0,1);">
+            <p class="text-white mb-1 font-quote" style="line-height: 1.5; font-size: 1rem; text-shadow: 0 2px 6px rgba(0,0,0,1);">
               "Two lives, two hearts, joined together in friendship and united forever in love. We cordially invite you and your family to grace our wedding ceremony."
             </p>
-            <p class="text-white-50 small fst-italic mb-0" style="font-size: 0.75rem; text-shadow: 0 2px 6px rgba(0,0,0,1);">
+            <p class="text-white-50 fst-italic mb-0 font-quote" style="font-size: 0.92rem; text-shadow: 0 2px 6px rgba(0,0,0,1);">
               "Your presence, love, and heartfelt prayers are the greatest gifts as we begin our new journey together!"
             </p>
-            <p class="font-script fs-3 text-royal-gold mt-1 mb-0" style="text-shadow: 0 2px 8px rgba(0,0,0,1);">&mdash; Muthupandi &amp; Miruthika</p>
+            <p class="font-script fs-3 gold-shimmer mt-1 mb-0">&mdash; Muthupandi &amp; Miruthika</p>
           </div>
         </div>
 
@@ -1015,6 +1260,7 @@
           </div>
         </div>
 
+
         <!-- Back to Top Button -->
         <button type="button" class="btn btn-warning text-dark btn-sm rounded-pill px-4 py-1 shadow-sm font-royal fw-bold mt-1" onclick="goToPage(1, false)" style="font-size: 0.75rem;">
           <i class="fa-solid fa-rotate-right me-1"></i> Top
@@ -1025,478 +1271,391 @@
   </div>
 
   <script>
-    // --- 1. Page Navigation System with Smooth Scroll Snap ---
-    function goToPage() {
-      var pageNum = arguments[0];
-      var withBoom = arguments[1];
+    // @ts-nocheck
+    /* Wedding invitation logic. Types are documented with JSDoc. */
 
-      if (withBoom) {
-        triggerBoomShot();
-      }
+    /** Short element lookup (typed loosely on purpose). @param {string} id @returns {any} */
+    function $(id) { return document.getElementById(id); }
 
-      var target = document.getElementById('page-' + pageNum);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
-        if (pageNum === 2) {
-          setTimeout(initFirstScratchCanvas, 150);
-        }
-      }
+    // ---------- 1. Page navigation ----------
+    /**
+     * @param {number} pageNum
+     * @param {boolean} [withBoom]
+     */
+    function goToPage(pageNum, withBoom) {
+      if (withBoom) triggerBoomShot();
+      var target = $('page-' + pageNum);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // --- 2. CapCut Ending Watermark Prevention & Safe Loop ---
-    function guardCapCutWatermark() {
-      var vids = document.querySelectorAll('video');
-      for (var k = 0; k < vids.length; k++) {
-        (function() {
-          var v = vids[k];
-          v.addEventListener('timeupdate', function() {
-            if (v.duration && v.duration > 2.5) {
-              if (v.currentTime >= (v.duration - 2.4)) {
-                v.currentTime = 0.05;
-                v.play().catch(function() {});
-              }
-            }
-          });
-        })();
-      }
+    // ---------- 2. Videos (play only while visible = no lag) ----------
+    /** @param {HTMLVideoElement} v */
+    function safePlay(v) {
+      var p = v.play();
+      if (p && p.catch) p.catch(function () {});
     }
 
-    function playContainerVideosNow() {
-      var cardVids = document.querySelectorAll('.scratch-bg-video, #msgVideoBg');
-      for (var i = 0; i < cardVids.length; i++) {
-        var cv = cardVids[i];
-        if (cv) {
-          cv.muted = true;
-          cv.playbackRate = 1.30;
-          var cp = cv.play();
-          if (cp !== undefined) {
-            cp.catch(function() {});
-          }
-        }
-      }
+    /** Skips the last 2.4s of a clip (watermark) by looping early. */
+    function trimLoop(/** @type {HTMLVideoElement} */ v) {
+      v.addEventListener('timeupdate', function () {
+        if (v.duration > 2.5 && v.currentTime >= v.duration - 2.4) v.currentTime = 0.05;
+      });
+    }
+
+    function setupLazyVideos() {
+      /** @type {HTMLVideoElement[]} */
+      var vids = Array.from(document.querySelectorAll('.scratch-bg-video, #msgVideoBg'));
+      vids.forEach(function (/** @type {HTMLVideoElement} */ v) {
+        v.muted = true;
+        v.playbackRate = 1.3;
+        trimLoop(v);
+      });
+      if (!('IntersectionObserver' in window)) { vids.forEach(safePlay); return; }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          var vid = /** @type {HTMLVideoElement} */ (e.target);
+          if (e.isIntersecting) safePlay(vid); else vid.pause();
+        });
+      }, { threshold: 0.15 });
+      vids.forEach(function (/** @type {HTMLVideoElement} */ v) { io.observe(v); });
     }
 
     function openInvitationAction() {
       startBgm();
-
-      var overlayContainer = document.getElementById('globalEffectContainer');
-      var overlayVid = document.getElementById('globalEffectVideo');
-
-      if (overlayContainer && overlayVid) {
-        overlayContainer.classList.add('active-playing');
-        overlayVid.muted = true;
-        overlayVid.playbackRate = 1.30;
-        overlayVid.currentTime = 0;
-        var p = overlayVid.play();
-        if (p !== undefined) {
-          p.catch(function() {});
-        }
+      var box = $('globalEffectContainer');
+      var vid = $('globalEffectVideo');
+      if (box && vid) {
+        var hide = function () {
+          box.classList.remove('active-playing');
+          vid.pause();
+        };
+        vid.onended = hide;
+        vid.ontimeupdate = function () {
+          if (vid.duration > 2.5 && vid.currentTime >= vid.duration - 2.4) hide();
+        };
+        box.classList.add('active-playing');
+        vid.muted = true;
+        vid.playbackRate = 1.3;
+        vid.currentTime = 0;
+        safePlay(vid);
       }
-
-      playContainerVideosNow();
       triggerBoomShot();
-
-      setTimeout(function() {
-        goToPage(2, false);
-      }, 250);
+      setTimeout(function () { goToPage(2, false); }, 250);
     }
 
-    // --- 3. Background Music Controller ---
-    var bgmAudio = document.getElementById('weddingBgm');
-    var musicBtn = document.getElementById('musicBtn');
+    // ---------- 3. Background music ----------
+    var bgmAudio = $('weddingBgm');
+    var musicBtn = $('musicBtn');
     var isMusicPlaying = false;
 
+    function setMusicUi(/** @type {boolean} */ on) {
+      isMusicPlaying = on;
+      if (!musicBtn) return;
+      musicBtn.classList.toggle('playing', on);
+      musicBtn.querySelector('i').className = on ? 'fa-solid fa-music' : 'fa-solid fa-volume-xmark';
+    }
+
     function startBgm() {
-      if (bgmAudio) {
-        bgmAudio.volume = 0.70;
-        var playPromise = bgmAudio.play();
-        if (playPromise !== undefined) {
-          playPromise.then(function() {
-            isMusicPlaying = true;
-            if (musicBtn) {
-              musicBtn.classList.add('playing');
-              musicBtn.querySelector('i').className = 'fa-solid fa-music';
-            }
-          }).catch(function() {
-            console.log("Audio play note:", arguments[0]);
-          });
-        }
-      }
+      if (!bgmAudio) return;
+      bgmAudio.volume = 0.7;
+      var p = bgmAudio.play();
+      if (p && p.then) p.then(function () { setMusicUi(true); }).catch(function () {});
     }
 
     function toggleBgm() {
       if (!bgmAudio) return;
-      if (isMusicPlaying) {
-        bgmAudio.pause();
-        isMusicPlaying = false;
-        if (musicBtn) {
-          musicBtn.classList.remove('playing');
-          musicBtn.querySelector('i').className = 'fa-solid fa-volume-xmark';
+      if (isMusicPlaying) { bgmAudio.pause(); setMusicUi(false); }
+      else { safePlay(bgmAudio); setMusicUi(true); }
+    }
+
+    // ---------- 4. Image sliders (run only while visible) ----------
+    /**
+     * @param {string} boxId
+     * @param {string} baseClass
+     * @param {string[]} styles
+     */
+    function createSlider(boxId, baseClass, styles) {
+      var box = $(boxId);
+      if (!box) return;
+      var slides = box.querySelectorAll('.' + baseClass);
+      if (!slides.length) return;
+      var index = 0;
+      /** @type {number|null} */
+      var timer = null;
+
+      function next() {
+        index = (index + 1) % slides.length;
+        var style = styles[Math.floor(Math.random() * styles.length)];
+        for (var i = 0; i < slides.length; i++) {
+          if (i !== index) slides[i].className = baseClass;
         }
-      } else {
-        bgmAudio.play();
-        isMusicPlaying = true;
-        if (musicBtn) {
-          musicBtn.classList.add('playing');
-          musicBtn.querySelector('i').className = 'fa-solid fa-music';
-        }
+        slides[index].className = baseClass + ' active ' + style;
       }
+      function start() { if (!timer) timer = setInterval(next, 3000); }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+      if (!('IntersectionObserver' in window)) { start(); return; }
+      new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) start(); else stop();
+      }, { threshold: 0.2 }).observe(box);
     }
 
-    // --- 4. Page 4: Dindigul Hall Carousel Engine (Every 3 Seconds) ---
-    var currentSlideIndex = 0;
-    var sliderTimer = null;
-    var transitionStyles = ['trans-zoom', 'trans-pan', 'trans-slide', 'trans-settle'];
-
-    function cycleMahalSlides() {
-      var slider = document.getElementById('mahalSlider');
-      if (!slider) return;
-      var slides = slider.querySelectorAll('.custom-slide-img');
-      if (!slides || slides.length === 0) return;
-
-      currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-      var randomTransition = transitionStyles[Math.floor(Math.random() * transitionStyles.length)];
-
-      for (var i = 0; i < slides.length; i++) {
-        if (i !== currentSlideIndex) {
-          slides[i].className = 'custom-slide-img';
-        }
-      }
-
-      slides[currentSlideIndex].className = 'custom-slide-img active ' + randomTransition;
-    }
-
-    function startSlider() {
-      if (sliderTimer) clearInterval(sliderTimer);
-      sliderTimer = setInterval(cycleMahalSlides, 3000);
-    }
-
-    // --- 5. Page 5: Dedicated Trichy Reception Hall Carousel Engine (Every 3 Seconds) ---
-    var currentTrichySlideIndex = 0;
-    var trichySliderTimer = null;
-    var trichyTransitionStyles = ['trichy-trans-diag', 'trichy-trans-sweep', 'trichy-trans-tilt', 'trichy-trans-lift'];
-
-    function cycleTrichySlides() {
-      var slider = document.getElementById('trichySlider');
-      if (!slider) return;
-      var slides = slider.querySelectorAll('.trichy-slide-img');
-      if (!slides || slides.length === 0) return;
-
-      currentTrichySlideIndex = (currentTrichySlideIndex + 1) % slides.length;
-      var randomStyle = trichyTransitionStyles[Math.floor(Math.random() * trichyTransitionStyles.length)];
-
-      for (var i = 0; i < slides.length; i++) {
-        if (i !== currentTrichySlideIndex) {
-          slides[i].className = 'trichy-slide-img';
-        }
-      }
-
-      slides[currentTrichySlideIndex].className = 'trichy-slide-img active ' + randomStyle;
-    }
-
-    function startTrichySlider() {
-      if (trichySliderTimer) clearInterval(trichySliderTimer);
-      trichySliderTimer = setInterval(cycleTrichySlides, 3000);
-    }
-
-    // Dynamic Observer for Both Sliders
-    function observeSliders() {
-      if (!window.IntersectionObserver) return;
-
-      var page4 = document.getElementById('page-4');
-      if (page4) {
-        var obs4 = new IntersectionObserver(function(entries) {
-          if (entries[0].isIntersecting) { startSlider(); }
-        }, { threshold: 0.1 });
-        obs4.observe(page4);
-      }
-
-      var page5 = document.getElementById('page-5');
-      if (page5) {
-        var obs5 = new IntersectionObserver(function(entries) {
-          if (entries[0].isIntersecting) { startTrichySlider(); }
-        }, { threshold: 0.1 });
-        obs5.observe(page5);
-      }
-    }
-
-    // --- 6. Sequential Scratch Engine with Revealed Wishes ---
-    function renderFoilCanvas() {
-      var canvas = arguments[0];
-      var labelText = arguments[1];
-      if (!canvas) return null;
-      var ctx = canvas.getContext('2d');
-
+    // ---------- 5. Scratch cards ----------
+    /**
+     * @param {string} canvasId
+     * @param {Array<[number, string]>} colorStops
+     * @param {string} borderColor
+     * @param {string} labelColor
+     * @param {string} shadowColor
+     * @param {string} label
+     * @param {object} confettiOpts
+     * @param {(() => void)|null} onReveal
+     */
+    function setupScratch(canvasId, colorStops, borderColor, labelColor, shadowColor, label, confettiOpts, onReveal) {
+      var canvas = $(canvasId);
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d', { willReadFrequently: true });
       var rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width || 325;
-      canvas.height = rect.height || 126;
+      var W = canvas.width = Math.round(rect.width) || 325;
+      var H = canvas.height = Math.round(rect.height) || 134;
 
-      var grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      grad.addColorStop(0, '#c79a2c');
-      grad.addColorStop(0.25, '#f5dc8a');
-      grad.addColorStop(0.5, '#deb03d');
-      grad.addColorStop(0.75, '#fae8a9');
-      grad.addColorStop(1, '#ab831f');
+      var grad = ctx.createLinearGradient(0, 0, W, H);
+      colorStops.forEach(function (s) { grad.addColorStop(s[0], s[1]); });
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, W, H);
 
-      ctx.strokeStyle = 'rgba(78, 42, 6, 0.45)';
+      for (var n = 0; n < 140; n++) {
+        ctx.fillStyle = 'rgba(255,255,255,' + (Math.random() * 0.22) + ')';
+        ctx.fillRect(Math.random() * W, Math.random() * H, 1.6, 1.6);
+      }
+      ctx.strokeStyle = borderColor;
       ctx.lineWidth = 1.5;
       ctx.setLineDash([4, 4]);
-      ctx.strokeRect(6, 6, canvas.width - 12, canvas.height - 12);
+      ctx.strokeRect(6, 6, W - 12, H - 12);
       ctx.setLineDash([]);
-
       ctx.font = 'bold 11px Cinzel, serif';
-      ctx.fillStyle = '#241003';
+      ctx.fillStyle = labelColor;
       ctx.textAlign = 'center';
-      ctx.shadowColor = 'rgba(255, 255, 255, 0.6)';
+      ctx.shadowColor = shadowColor;
       ctx.shadowBlur = 4;
-      ctx.fillText(labelText, canvas.width / 2, canvas.height / 2 + 4);
+      ctx.fillText(label, W / 2, H / 2 + 4);
       ctx.shadowBlur = 0;
 
-      return ctx;
-    }
+      var scratching = false;
+      var revealed = false;
+      var lastX = 0, lastY = 0;
+      var lastCheck = 0;
 
-    // Scratch 1 Setup (Engagement)
-    function initFirstScratchCanvas() {
-      var canvas1 = document.getElementById('canvasEngagement');
-      if (!canvas1) return;
-      var ctx1 = renderFoilCanvas(canvas1, '✦ SCRATCH FOR ENGAGEMENT DATE ✦');
-      var isScratching = false;
-      var isRevealed = false;
-
-      function checkProgress() {
-        if (isRevealed) return;
-        var imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
-        var pixels = imageData.data;
-        var transparentCount = 0;
-
-        for (var i = 3; i < pixels.length; i += 32) {
-          if (pixels[i] === 0) transparentCount++;
-        }
-
-        var percent = (transparentCount / (pixels.length / 32)) * 100;
-        if (percent > 42) {
-          isRevealed = true;
-          canvas1.style.transition = 'opacity 0.5s ease';
-          canvas1.style.opacity = '0';
-          setTimeout(function() { canvas1.style.display = 'none'; }, 500);
-
-          confetti({ particleCount: 45, spread: 60, origin: { y: 0.45 }, colors: ['#dfba63', '#ffffff'] });
-
-          var w1 = document.getElementById('wishesBox1');
-          if (w1) w1.classList.add('show-wishes');
-
-          setTimeout(function() {
-            var wrap2 = document.getElementById('cardMuhurthamWrapper');
-            if (wrap2) {
-              wrap2.classList.add('revealed-flow');
-              initSecondScratchCanvas();
-            }
-            var guide = document.getElementById('scratchGuideText');
-            if (guide) guide.innerText = 'Now scratch card 2 to unveil our marriage date';
-          }, 600);
+      /** @param {boolean} [force] */
+      function checkProgress(force) {
+        var now = Date.now();
+        if (revealed || (!force && now - lastCheck < 200)) return;
+        lastCheck = now;
+        var px = ctx.getImageData(0, 0, W, H).data;
+        var clear = 0, total = 0;
+        for (var i = 3; i < px.length; i += 32) { total++; if (px[i] === 0) clear++; }
+        if (clear / total > 0.4) {
+          revealed = true;
+          canvas.style.transition = 'opacity 0.5s ease';
+          canvas.style.opacity = '0';
+          fireConfetti(confettiOpts);
+          setTimeout(function () {
+            canvas.style.display = 'none';
+            if (onReveal) onReveal();
+          }, 500);
         }
       }
 
-      function doScratch() {
-        var ev = arguments[0];
-        if (!isScratching || isRevealed || !ev) return;
-        var rect = canvas1.getBoundingClientRect();
-        var clientX = ev.touches ? ev.touches[0].clientX : ev.clientX;
-        var clientY = ev.touches ? ev.touches[0].clientY : ev.clientY;
-        ctx1.globalCompositeOperation = 'destination-out';
-        ctx1.beginPath();
-        ctx1.arc(clientX - rect.left, clientY - rect.top, 16, 0, Math.PI * 2);
-        ctx1.fill();
+      function pos(/** @type {PointerEvent} */ ev) {
+        var r = canvas.getBoundingClientRect();
+        return {
+          x: (ev.clientX - r.left) * (W / r.width),
+          y: (ev.clientY - r.top) * (H / r.height)
+        };
+      }
+
+      canvas.addEventListener('pointerdown', function (/** @type {PointerEvent} */ ev) {
+        scratching = true;
+        var p = pos(ev);
+        lastX = p.x; lastY = p.y;
+        try { canvas.setPointerCapture(ev.pointerId); } catch (e) {}
+        draw(p.x, p.y);
+      });
+      canvas.addEventListener('pointermove', function (/** @type {PointerEvent} */ ev) {
+        if (!scratching || revealed) return;
+        var p = pos(ev);
+        draw(p.x, p.y);
+      });
+      function end() { scratching = false; checkProgress(true); }
+      canvas.addEventListener('pointerup', end);
+      canvas.addEventListener('pointercancel', end);
+
+      function draw(/** @type {number} */ x, /** @type {number} */ y) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 34;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        lastX = x; lastY = y;
         checkProgress();
       }
-
-      canvas1.addEventListener('mousedown', function() { isScratching = true; });
-      window.addEventListener('mouseup', function() { isScratching = false; });
-      canvas1.addEventListener('mousemove', doScratch);
-      canvas1.addEventListener('touchstart', function(ev) { isScratching = true; doScratch(ev); });
-      window.addEventListener('touchend', function() { isScratching = false; });
-      canvas1.addEventListener('touchmove', doScratch);
     }
 
-    // Scratch 2 Setup (Muhurtham)
-    function initSecondScratchCanvas() {
-      var canvas2 = document.getElementById('canvasMuhurtham');
-      if (!canvas2) return;
-      var ctx2 = renderFoilCanvas(canvas2, '✦ SCRATCH FOR MUHURTHAM DATE ✦');
-      var isScratching = false;
-      var isRevealed = false;
-
-      function checkProgress() {
-        if (isRevealed) return;
-        var imageData = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
-        var pixels = imageData.data;
-        var transparentCount = 0;
-
-        for (var i = 3; i < pixels.length; i += 32) {
-          if (pixels[i] === 0) transparentCount++;
+    function initScratchCards() {
+      setupScratch(
+        'canvasMuhurtham',
+        [[0, '#c79a2c'], [0.25, '#f5dc8a'], [0.5, '#deb03d'], [0.75, '#fae8a9'], [1, '#ab831f']],
+        'rgba(78, 42, 6, 0.45)', '#241003', 'rgba(255, 255, 255, 0.6)',
+        '✦ SCRATCH FOR SUBHA MUHURTHAM ✦',
+        { particleCount: 55, spread: 70, origin: { y: 0.5 }, colors: ['#ffd700', '#ff3366', '#ffffff'] },
+        null
+      );
+      setupScratch(
+        'canvasReception',
+        [[0, '#047857'], [0.28, '#10b981'], [0.55, '#facc15'], [0.78, '#059669'], [1, '#064e3b']],
+        'rgba(255, 255, 255, 0.65)', '#022c22', 'rgba(255, 255, 255, 0.75)',
+        '✦ SCRATCH FOR RECEPTION DETAILS ✦',
+        { particleCount: 55, spread: 75, origin: { y: 0.55 }, colors: ['#10b981', '#ffd700', '#ffffff', '#3b82f6'] },
+        function () {
+          var card = $('cardReception');
+          if (card) card.style.display = 'none';
+          var rev = $('receptionRevealedBox');
+          if (rev) rev.classList.add('active-revealed');
         }
-
-        var percent = (transparentCount / (pixels.length / 32)) * 100;
-        if (percent > 42) {
-          isRevealed = true;
-          canvas2.style.transition = 'opacity 0.5s ease';
-          canvas2.style.opacity = '0';
-          setTimeout(function() { canvas2.style.display = 'none'; }, 500);
-
-          confetti({ particleCount: 65, spread: 70, origin: { y: 0.65 }, colors: ['#ff3366', '#ffd700', '#ffffff'] });
-
-          var w2 = document.getElementById('wishesBox2');
-          if (w2) w2.classList.add('show-wishes');
-
-          var guide = document.getElementById('scratchGuideText');
-          if (guide) guide.innerText = 'Both dates revealed! Swipe down to explore profiles';
-        }
-      }
-
-      function doScratch() {
-        var ev = arguments[0];
-        if (!isScratching || isRevealed || !ev) return;
-        var rect = canvas2.getBoundingClientRect();
-        var clientX = ev.touches ? ev.touches[0].clientX : ev.clientX;
-        var clientY = ev.touches ? ev.touches[0].clientY : ev.clientY;
-        ctx2.globalCompositeOperation = 'destination-out';
-        ctx2.beginPath();
-        ctx2.arc(clientX - rect.left, clientY - rect.top, 16, 0, Math.PI * 2);
-        ctx2.fill();
-        checkProgress();
-      }
-
-      canvas2.addEventListener('mousedown', function() { isScratching = true; });
-      window.addEventListener('mouseup', function() { isScratching = false; });
-      canvas2.addEventListener('mousemove', doScratch);
-      canvas2.addEventListener('touchstart', function(ev) { isScratching = true; doScratch(ev); });
-      window.addEventListener('touchend', function() { isScratching = false; });
-      canvas2.addEventListener('touchmove', doScratch);
+      );
     }
 
-    // --- 7. Confetti & Firecracker Celebration Animations ---
+    // ---------- 6. Confetti (safe even if the CDN script fails to load) ----------
+    function fireConfetti(/** @type {object} */ opts) {
+      var fn = /** @type {any} */ (window).confetti;
+      if (typeof fn === 'function') fn(opts);
+    }
+
     function triggerBoomShot() {
-      confetti({ particleCount: 70, angle: 60, spread: 55, origin: { x: 0, y: 0.7 } });
-      confetti({ particleCount: 70, angle: 120, spread: 55, origin: { x: 1, y: 0.7 } });
+      fireConfetti({ particleCount: 50, angle: 60, spread: 55, origin: { x: 0, y: 0.7 } });
+      fireConfetti({ particleCount: 50, angle: 120, spread: 55, origin: { x: 1, y: 0.7 } });
     }
 
-    function triggerCrackerCelebration() {
-      var elem = arguments[0];
+    /** @param {HTMLElement} elem */
+    function triggerCrackerCelebration(elem) {
       if (!elem) return;
-      var rect = elem.getBoundingClientRect();
-      var centerX = (rect.left + rect.width / 2) / window.innerWidth;
-      var centerY = (rect.top + rect.height / 2) / window.innerHeight;
-
-      confetti({
-        particleCount: 45,
+      var r = elem.getBoundingClientRect();
+      fireConfetti({
+        particleCount: 40,
         startVelocity: 26,
         spread: 360,
         ticks: 80,
-        origin: { x: centerX, y: centerY },
+        origin: { x: (r.left + r.width / 2) / window.innerWidth, y: (r.top + r.height / 2) / window.innerHeight },
         colors: ['#ffd700', '#ff3366', '#00e5ff', '#76ff03', '#ff9100', '#ffffff'],
         scalar: 1.05
       });
     }
 
-    // --- 8. Profile Unlocking ---
-    function unlockProfile() {
-      var boxId = arguments[0];
-      var box = document.getElementById(boxId);
+    // ---------- 7. Profile unlock ----------
+    /** @param {string} boxId */
+    function unlockProfile(boxId) {
+      var box = $(boxId);
       if (!box || box.classList.contains('unlocked')) return;
       box.classList.add('unlocked');
       triggerCrackerCelebration(box);
     }
 
-    // --- 9. Countdown to Nov 13, 2026 06:00:00 ---
+    // ---------- 8. Countdown to 13 Nov 2026, 06:00 ----------
     var targetDate = new Date('2026-11-13T06:00:00').getTime();
+    var cdEls = {
+      d: $('timer-days'),
+      h: $('timer-hours'),
+      m: $('timer-mins'),
+      s: $('timer-secs')
+    };
+
+    /** @param {number} n */
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
     function updateCountdown() {
-      var now = new Date().getTime();
-      var diff = targetDate - now;
-
-      if (diff <= 0) {
-        document.getElementById('timer-days').innerText = '00';
-        document.getElementById('timer-hours').innerText = '00';
-        document.getElementById('timer-mins').innerText = '00';
-        document.getElementById('timer-secs').innerText = '00';
-        return;
-      }
-
-      var days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      var mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      var secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-      document.getElementById('timer-days').innerText = days < 10 ? '0' + days : days;
-      document.getElementById('timer-hours').innerText = hours < 10 ? '0' + hours : hours;
-      document.getElementById('timer-mins').innerText = mins < 10 ? '0' + mins : mins;
-      document.getElementById('timer-secs').innerText = secs < 10 ? '0' + secs : secs;
+      var diff = Math.max(0, targetDate - Date.now());
+      cdEls.d.textContent = pad(Math.floor(diff / 86400000));
+      cdEls.h.textContent = pad(Math.floor((diff % 86400000) / 3600000));
+      cdEls.m.textContent = pad(Math.floor((diff % 3600000) / 60000));
+      cdEls.s.textContent = pad(Math.floor((diff % 60000) / 1000));
     }
 
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-
-    // --- 10. Send Wedding Wishes via WhatsApp ---
-    function sendWishWhatsApp() {
-      var recipient = arguments[0];
-      var nameInput = document.getElementById('guestName');
-      var msgInput = document.getElementById('guestMessage');
-
-      var senderName = nameInput.value.trim() || 'A Well-Wisher';
-      var userMsg = msgInput.value.trim();
-
-      var phoneNumber = '919659072060';
-      var headerText = '';
+    // ---------- 9. WhatsApp wishes ----------
+    /** @param {string} recipient */
+    function sendWishWhatsApp(recipient) {
+      var senderName = $('guestName').value.trim() || 'A Well-Wisher';
+      var userMsg = $('guestMessage').value.trim();
+      var phone, header;
 
       if (recipient === 'groom') {
-        phoneNumber = '919659072060';
-        headerText = '✨ Advance Wedding Wishes to Dear Muthupandi! 🤵💐';
+        phone = '919659072060';
+        header = '✨ Advance Wedding Wishes to Dear Muthupandi! 🤵💐';
       } else if (recipient === 'bride') {
-        phoneNumber = '916369339420';
-        headerText = '✨ Advance Wedding Wishes to Dear Miruthika! 👰💐';
+        phone = '916369339420';
+        header = '✨ Advance Wedding Wishes to Dear Miruthika! 👰💐';
       } else {
-        phoneNumber = '916369339420';
-        headerText = '✨ Heartiest Advance Wedding Wishes to both of you! 💍💖';
+        phone = '916369339420';
+        header = '✨ Heartiest Advance Wedding Wishes to both of you! 💍💖';
       }
 
       var defaultQuote = '"May your journey together be blessed with endless happiness, love, and togetherness!" 🪔✨';
-      var finalBody = userMsg.length > 0 ? ('"' + userMsg + '"') : defaultQuote;
+      var body = userMsg ? ('"' + userMsg + '"') : defaultQuote;
+      var text = header + '\n\n' + '💌 Message:\n' + body + '\n\n' + '— From:\n' + '💐 ' + senderName;
 
-      var compiledMessage = 
-        headerText + '\n\n' +
-        '💌 Message:\n' + finalBody + '\n\n' +
-        '— From:\n' +
-        '💐 ' + senderName;
-
-      confetti({ particleCount: 80, spread: 65, origin: { y: 0.8 } });
-
-      var whatsappUrl = 'https://api.whatsapp.com/send?phone=' + phoneNumber + '&text=' + encodeURIComponent(compiledMessage);
-      window.location.href = whatsappUrl;
+      fireConfetti({ particleCount: 70, spread: 65, origin: { y: 0.8 } });
+      window.location.href = 'https://api.whatsapp.com/send?phone=' + phone + '&text=' + encodeURIComponent(text);
     }
 
-    // --- Page Initialization ---
-    window.addEventListener('DOMContentLoaded', function() {
-      startSlider();
-      startTrichySlider();
-      observeSliders();
-      guardCapCutWatermark();
-      playContainerVideosNow();
-      setTimeout(initFirstScratchCanvas, 250);
+    // ---------- 10. Petals (few, GPU-friendly) ----------
+    function createPetals() {
+      var layer = $('petalLayer');
+      if (!layer) return;
+      var colors = ['#ffb300', '#ff8f00', '#e53935', '#f06292', '#fff8e1'];
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < 8; i++) {
+        var p = document.createElement('span');
+        p.className = 'petal';
+        p.style.left = (Math.random() * 100) + '%';
+        p.style.background = colors[i % colors.length];
+        p.style.animationDuration = (10 + Math.random() * 9) + 's';
+        p.style.animationDelay = (Math.random() * 12) + 's';
+        frag.appendChild(p);
+      }
+      layer.appendChild(frag);
+    }
+
+    // ---------- 11. Scroll reveal ----------
+    function setupReveal() {
+      if (!('IntersectionObserver' in window)) return;
+      document.body.classList.add('js-reveal-on');
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+      setTimeout(function () {
+        document.querySelectorAll('.reveal:not(.in)').forEach(function (el) {
+          if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('in');
+        });
+      }, 900);
+    }
+
+    // ---------- Init ----------
+    window.addEventListener('DOMContentLoaded', function () {
+      createPetals();
+      setupReveal();
+      setupLazyVideos();
+      createSlider('mahalSlider', 'custom-slide-img', ['trans-zoom', 'trans-pan', 'trans-slide', 'trans-settle']);
+      createSlider('trichySlider', 'trichy-slide-img', ['trichy-trans-glow', 'trichy-trans-drift', 'trichy-trans-glide', 'trichy-trans-depth']);
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+      initScratchCards();
     });
-
-    document.addEventListener('touchstart', function() {
-      playContainerVideosNow();
-    }, { once: true });
-
-    document.addEventListener('click', function() {
-      playContainerVideosNow();
-    }, { once: true });
   </script>
-
-  <!-- Bootstrap JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
